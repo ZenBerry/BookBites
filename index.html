@@ -12,6 +12,7 @@
             font-family: sans-serif;
             text-align: center;
             background-color: #f5f5f5;
+            position: relative;
         }
         .quote-box {
             max-width: 700px;
@@ -25,30 +26,66 @@
             gap: 20px;
             flex-direction: column;
             align-items: center;
+            position: relative;
         }
         .quote-text {
             font-size: 1.2rem;
-            /* margin-bottom: 20px; */
         }
         .quote-author {
             font-weight: bold;
             font-size: 1rem;
-            /* display: none; */
         }
         .quote-book {
             font-style: italic;
             font-size: 0.9rem;
-            /* display: none; */
         }
         .quote-author:empty,
         .quote-book:empty {
             display: none;
         }
-        
+
+        /* Buttons */
+        .btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            transition: background-color 0.2s;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .btn-home {
+            top: -70px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .btn-prev {
+            left: -70px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .btn-next {
+            right: -70px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
     </style>
 </head>
 <body>
     <div class="quote-box">
+        <button class="btn btn-home">🏠</button>
+        <button class="btn btn-prev">◀</button>
+        <button class="btn btn-next">▶</button>
+
         <div class="quote-text">Loading...</div>
         <div class="quote-author"></div>
         <div class="quote-book"></div>
@@ -77,13 +114,11 @@
         function showQuote() {
             if (quotes.length === 0) return;
             const q = quotes[index];
-            // Fade out
             quoteBox.style.opacity = 0;
             setTimeout(() => {
                 quoteText.textContent = q.quote;
                 quoteAuthor.textContent = q.author;
                 quoteBook.textContent = q.book;
-                // Fade in
                 quoteBox.style.opacity = 1;
             }, 500);
         }
@@ -95,6 +130,23 @@
                 index = (index + 1) % quotes.length;
                 showQuote();
             }
+        });
+
+        // Button events
+        document.querySelector('.btn-next').addEventListener('click', () => {
+            if (quotes.length === 0) return;
+            index = (index + 1) % quotes.length;
+            showQuote();
+        });
+
+        document.querySelector('.btn-prev').addEventListener('click', () => {
+            if (quotes.length === 0) return;
+            index = (index - 1 + quotes.length) % quotes.length;
+            showQuote();
+        });
+
+        document.querySelector('.btn-home').addEventListener('click', () => {
+            window.location.href = '/';
         });
 
         fetchQuotes();
