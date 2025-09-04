@@ -22,7 +22,7 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             gap: 10px;
             opacity: 0; /* start invisible */
-            transition: opacity 0.5s ease; /* smooth fade only */
+            transition: opacity 0.5s ease; /* smooth fade */
         }
         input {
             flex: 1;
@@ -61,7 +61,14 @@
         function goToQuotes() {
             const query = input.value.trim();
             if (!query) return;
-            window.location.href = `/?q=${encodeURIComponent(query)}`;
+
+            // Fade out
+            searchBox.style.opacity = 0;
+
+            // Redirect after fade completes
+            setTimeout(() => {
+                window.location.href = `/?q=${encodeURIComponent(query)}`;
+            }, 500); // match the CSS transition duration
         }
 
         button.addEventListener('click', goToQuotes);

@@ -212,7 +212,15 @@
         document.querySelector('.btn-next').addEventListener('click', nextQuote);
         document.querySelector('.btn-prev').addEventListener('click', prevQuote);
         document.querySelector('.btn-home').addEventListener('click', () => {
-            window.location.href = '/';
+            // Fade out all elements
+            quoteBox.style.opacity = 0;
+            dotsContainer.style.opacity = 0;
+            buttons.forEach(btn => btn.style.opacity = 0);
+        
+            // Redirect after fade completes
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 500); // match the CSS transition duration
         });
 
         fetchQuotes();
