@@ -6,12 +6,16 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             font-family: sans-serif;
             text-align: center;
             background-color: #f5f5f5;
+            position: relative;
+        }
+        .quote-box-container {
             position: relative;
         }
         .quote-box {
@@ -71,11 +75,12 @@
             transform: translateY(-50%);
         }
 
-        /* Dots */
+        /* Dots below the card */
         .dots {
             display: flex;
             gap: 6px;
             margin-top: 20px;
+            justify-content: center;
         }
         .dot {
             width: 12px;
@@ -91,14 +96,16 @@
     </style>
 </head>
 <body>
-    <div class="quote-box">
-        <button class="btn btn-home">Home</button>
-        <button class="btn btn-prev">Prev</button>
-        <button class="btn btn-next">Next</button>
+    <div class="quote-box-container">
+        <div class="quote-box">
+            <button class="btn btn-home">Home</button>
+            <button class="btn btn-prev">Prev</button>
+            <button class="btn btn-next">Next</button>
 
-        <div class="quote-text">Loading...</div>
-        <div class="quote-author"></div>
-        <div class="quote-book"></div>
+            <div class="quote-text">Loading...</div>
+            <div class="quote-author"></div>
+            <div class="quote-book"></div>
+        </div>
         <div class="dots"></div>
     </div>
 
