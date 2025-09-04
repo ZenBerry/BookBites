@@ -46,22 +46,14 @@
 
         /* Buttons */
         .btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            padding: 10px 20px;
+            border-radius: 12px;
             border: none;
-            background-color: #4CAF50;
-            color: white;
+            background: white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             font-weight: bold;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             position: absolute;
-            transition: background-color 0.2s;
-        }
-        .btn:hover {
-            background-color: #45a049;
         }
         .btn-home {
             top: -70px;
@@ -69,26 +61,45 @@
             transform: translateX(-50%);
         }
         .btn-prev {
-            left: -70px;
+            left: -90px;
             top: 50%;
             transform: translateY(-50%);
         }
         .btn-next {
-            right: -70px;
+            right: -90px;
             top: 50%;
             transform: translateY(-50%);
+        }
+
+        /* Dots */
+        .dots {
+            display: flex;
+            gap: 6px;
+            margin-top: 20px;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ccc;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .dot.active {
+            background-color: #4CAF50;
         }
     </style>
 </head>
 <body>
     <div class="quote-box">
-        <button class="btn btn-home">🏠</button>
-        <button class="btn btn-prev">◀</button>
-        <button class="btn btn-next">▶</button>
+        <button class="btn btn-home">Home</button>
+        <button class="btn btn-prev">Prev</button>
+        <button class="btn btn-next">Next</button>
 
         <div class="quote-text">Loading...</div>
         <div class="quote-author"></div>
         <div class="quote-book"></div>
+        <div class="dots"></div>
     </div>
 
     <script>
@@ -96,15 +107,18 @@
         const query = params.get('q') || 'Jasper Fforde';
         let quotes = [];
         let index = 0;
+
         const quoteBox = document.querySelector('.quote-box');
         const quoteText = document.querySelector('.quote-text');
         const quoteAuthor = document.querySelector('.quote-author');
         const quoteBook = document.querySelector('.quote-book');
+        const dotsContainer = document.querySelector('.dots');
 
         async function fetchQuotes() {
             const response = await fetch(`/quotes?q=${encodeURIComponent(query)}`);
             quotes = await response.json();
             if (quotes.length > 0) {
+                createDots();
                 showQuote();
             } else {
                 quoteText.textContent = "No quotes found.";
@@ -120,31 +134,52 @@
                 quoteAuthor.textContent = q.author;
                 quoteBook.textContent = q.book;
                 quoteBox.style.opacity = 1;
+                updateDots();
             }, 500);
+        }
+
+        function createDots() {
+            dotsContainer.innerHTML = '';
+            quotes.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                dot.addEventListener('click', () => {
+                    index = i;
+                    showQuote();
+                });
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function updateDots() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        function nextQuote() {
+            if (quotes.length === 0) return;
+            index = (index + 1) % quotes.length;
+            showQuote();
+        }
+
+        function prevQuote() {
+            if (quotes.length === 0) return;
+            index = (index - 1 + quotes.length) % quotes.length;
+            showQuote();
         }
 
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
                 e.preventDefault();
-                if (quotes.length === 0) return;
-                index = (index + 1) % quotes.length;
-                showQuote();
+                nextQuote();
             }
         });
 
         // Button events
-        document.querySelector('.btn-next').addEventListener('click', () => {
-            if (quotes.length === 0) return;
-            index = (index + 1) % quotes.length;
-            showQuote();
-        });
-
-        document.querySelector('.btn-prev').addEventListener('click', () => {
-            if (quotes.length === 0) return;
-            index = (index - 1 + quotes.length) % quotes.length;
-            showQuote();
-        });
-
+        document.querySelector('.btn-next').addEventListener('click', nextQuote);
+        document.querySelector('.btn-prev').addEventListener('click', prevQuote);
         document.querySelector('.btn-home').addEventListener('click', () => {
             window.location.href = '/';
         });
