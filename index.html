@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Quotes</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: sans-serif;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+        .quote-box {
+            max-width: 700px;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+        .quote-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        .quote-author {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .quote-book {
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="quote-box">
+        <div class="quote-text">Loading...</div>
+        <div class="quote-author"></div>
+        <div class="quote-book"></div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const query = params.get('q') || 'Jasper Fforde';
+        let quotes = [];
+        let index = 0;
+        const quoteBox = document.querySelector('.quote-box');
+        const quoteText = document.querySelector('.quote-text');
+        const quoteAuthor = document.querySelector('.quote-author');
+        const quoteBook = document.querySelector('.quote-book');
+
+        async function fetchQuotes() {
+            const response = await fetch(`/quotes?q=${encodeURIComponent(query)}`);
+            quotes = await response.json();
+            if (quotes.length > 0) {
+                showQuote();
+            } else {
+                quoteText.textContent = "No quotes found.";
+            }
+        }
+
+        function showQuote() {
+            if (quotes.length === 0) return;
+            const q = quotes[index];
+            // Fade out
+            quoteBox.style.opacity = 0;
+            setTimeout(() => {
+                quoteText.textContent = q.quote;
+                quoteAuthor.textContent = `— ${q.author}`;
+                quoteBook.textContent = q.book;
+                // Fade in
+                quoteBox.style.opacity = 1;
+            }, 500);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (quotes.length === 0) return;
+                index = (index + 1) % quotes.length;
+                showQuote();
+            }
+        });
+
+        fetchQuotes();
+    </script>
+</body>
+</html>
