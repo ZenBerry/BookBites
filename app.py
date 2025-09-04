@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, send_file, redirect
-from quote import quote  # your existing quote function
+from quote import quote 
 
 app = Flask(__name__)
 
