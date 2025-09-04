@@ -21,19 +21,30 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             opacity: 1;
             transition: opacity 0.5s ease;
+            display: flex;
+            gap: 20px;
+            flex-direction: column;
+            align-items: center;
         }
         .quote-text {
             font-size: 1.2rem;
-            margin-bottom: 20px;
+            /* margin-bottom: 20px; */
         }
         .quote-author {
             font-weight: bold;
             font-size: 1rem;
+            /* display: none; */
         }
         .quote-book {
             font-style: italic;
             font-size: 0.9rem;
+            /* display: none; */
         }
+        .quote-author:empty,
+        .quote-book:empty {
+            display: none;
+        }
+        
     </style>
 </head>
 <body>
@@ -70,7 +81,7 @@
             quoteBox.style.opacity = 0;
             setTimeout(() => {
                 quoteText.textContent = q.quote;
-                quoteAuthor.textContent = `— ${q.author}`;
+                quoteAuthor.textContent = q.author;
                 quoteBook.textContent = q.book;
                 // Fade in
                 quoteBox.style.opacity = 1;
